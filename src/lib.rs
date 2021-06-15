@@ -1,0 +1,1 @@
+const BASE_URI: &str = "https://api.mangadex.org"
