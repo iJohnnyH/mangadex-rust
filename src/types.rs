@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 pub struct Author {
     pub id: String,
     pub name: String,
-    pub image_url: Something,
+    pub image_url: String,
     pub bio: String,
     pub created: String,
     pub updated: String
@@ -21,10 +21,11 @@ pub struct MangaTag {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Manga {
-    pub id: u32
+    pub id: u32,
     pub title: String,
     pub alt_title: Vec<String>,
     pub desc: String,
+    pub author: Author,
     pub is_locked: bool,
     pub links: String,
     pub original_lang: String,   
