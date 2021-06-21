@@ -7,7 +7,7 @@ use log::error;
 
 #[derive(Debug, Error)]
 pub enum ClientError {
-    #[error("Mangadex API Error")]
+    #[error("Reqwest Error")]
     Error(#[from] reqwest::Error),
 
     #[error("Error parsing JSON")]
@@ -41,13 +41,13 @@ impl Session {
         }
     }
 
-    pub async fn get(&self, url: &str) -> Result<String, ClientError> {
+    pub async fn get(&self, url: &str) -> Result<Response, ClientError> {
         let req = self.client.get(url);
         // If refresh token is set, add it to the headers
 
         let resp = req.send().await?;
         if resp.status().is_success() {
-            Ok(resp.text().await?)
+            Ok(resp)
         } else {
             let err = resp.error_for_status_ref().err().unwrap();
             Err(ClientError::from_resp(resp, err).await)

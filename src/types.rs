@@ -1,5 +1,12 @@
 use serde::{Serialize, Deserialize};
+use serde_json::Value;
+use std::collections::HashMap;
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct DataObject {
+    pub id: String,
+    pub r#type: String
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Author {
@@ -20,24 +27,27 @@ pub struct MangaTag {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Manga {
-    pub id: u32,
-    pub title: String,
-    pub alt_title: Vec<String>,
-    pub desc: String,
-    pub author: Author,
-    pub is_locked: bool,
-    pub links: String,
-    pub original_lang: String,   
-    pub language: String,
-    pub last_vol: String,
-    pub last_chap: String,
-    pub pub_dem: String,
+pub struct MangaAttributes {
+    pub title: HashMap<String, String>,
+    pub altTitles: Vec<HashMap<String, String>>,
+    pub description: HashMap<String, String>,
+    // pub author: Author,
+    pub links: HashMap<String, String>,
+    pub originalLanguage: String,   
+    pub lastVolume: Option<String>,
+    pub lastChapter: Option<String>,
+    pub publicationDemographic: String,
     pub status: String,
-    pub year: u32,
-    pub rating: String,
-    pub tags: MangaTag,
-    pub version: u32,
-    pub created: String,
-    pub updated: String
+    pub year: Option<u32>,
+    pub contentRating: String,
+    // // pub tags: MangaTag,
+    pub createdAt: String,
+    pub updatedAt: String
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Manga {
+    #[serde(flatten)]
+    pub data: DataObject,
+    pub attributes: MangaAttributes
 }
