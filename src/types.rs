@@ -79,12 +79,12 @@ impl From<Value> for Manga {
                 .as_str()
                 .unwrap()
                 .to_string();
-            tags.push(MangaTag { id: id, name: name })
+            tags.push(MangaTag { id, name })
         }
 
         let mut author: Author = Author::default();
         for relat in i["relationships"].as_array().unwrap().iter() {
-            if relat["type"].as_str().unwrap_or("").to_string() == "author" {
+            if relat["type"].as_str().unwrap_or("") == "author" {
                 author = Author {
                     id: relat["id"].as_str().unwrap_or("").to_string(),
                     name: default_str(),
@@ -112,10 +112,10 @@ impl From<Value> for Manga {
             status: attr["status"].as_str().unwrap_or("").to_string(),
             year: attr["year"].as_str().unwrap_or("").to_string(),
             content_rating: attr["contentRating"].as_str().unwrap_or("").to_string(),
-            tags: tags,
+            tags,
             created_at: attr["createdAt"].as_str().unwrap_or("").to_string(),
             updated_at: attr["updatedAt"].as_str().unwrap_or("").to_string(),
-            author: author,
+            author,
         }
     }
 }

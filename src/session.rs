@@ -1,4 +1,4 @@
-use log::error;
+use log::{error, info};
 use reqwest::{Client, Error, Response, StatusCode};
 use thiserror::Error;
 
@@ -19,9 +19,7 @@ pub enum ClientError {
 impl ClientError {
     pub async fn from_resp(resp: reqwest::Response, err: Error) -> Self {
         let status = resp.status();
-        match status {
-            status => Self::MangaDexError(status, resp, err),
-        }
+        Self::MangaDexError(status, resp, err)
     }
 }
 
@@ -45,14 +43,12 @@ impl Session {
         url: &str,
         params: Option<HashMap<String, String>>,
     ) -> Result<Response, ClientError> {
+        info!("Send GET request to {}", url);
         let mut req = self.client.get(url);
-        match params {
-            Some(queries) => {
-                for (k, v) in queries.iter() {
-                    req = req.query(&[(k, v)]);
-                }
+        if let Some(queries) = params {
+            for (k, v) in queries.iter() {
+                req = req.query(&[(k, v)]);
             }
-            _ => (),
         }
         // If refresh token is set, add it to the headers
 
