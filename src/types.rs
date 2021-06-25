@@ -1,11 +1,11 @@
-use serde::{Serialize, Deserialize,};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DataObject {
     pub id: String,
-    pub r#type: String
+    pub r#type: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Default)]
@@ -22,13 +22,13 @@ pub struct Author {
     #[serde(default = "default_str")]
     pub created_at: String,
     #[serde(default = "default_str")]
-    pub updated_at: String
+    pub updated_at: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct MangaTag {
     pub id: String,
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -50,7 +50,7 @@ pub struct Manga {
     pub tags: Vec<MangaTag>,
     pub created_at: String,
     pub updated_at: String,
-    pub author: Author
+    pub author: Author,
 }
 
 fn _to_str_map(map: &serde_json::Map<String, Value>) -> HashMap<String, String> {
@@ -75,11 +75,11 @@ impl From<Value> for Manga {
         let mut tags = Vec::new();
         for map in attr["tags"].as_array().unwrap().iter() {
             let id = map["id"].as_str().unwrap().to_string();
-            let name = map["attributes"]["name"]["en"].as_str().unwrap().to_string();
-            tags.push(MangaTag {
-                id: id,
-                name: name
-            })
+            let name = map["attributes"]["name"]["en"]
+                .as_str()
+                .unwrap()
+                .to_string();
+            tags.push(MangaTag { id: id, name: name })
         }
 
         let mut author: Author = Author::default();
@@ -91,7 +91,7 @@ impl From<Value> for Manga {
                     image_url: default_str(),
                     bio: default_str(),
                     created_at: default_str(),
-                    updated_at: default_str()
+                    updated_at: default_str(),
                 };
             }
         }
@@ -105,14 +105,17 @@ impl From<Value> for Manga {
             original_language: attr["originalLanguage"].as_str().unwrap_or("").to_string(),
             last_volume: attr["lastVolume"].as_str().unwrap_or("").to_string(),
             last_chapter: attr["lastChapter"].as_str().unwrap_or("").to_string(),
-            publication_demographic: attr["publicationDemographic"].as_str().unwrap_or("").to_string(),
+            publication_demographic: attr["publicationDemographic"]
+                .as_str()
+                .unwrap_or("")
+                .to_string(),
             status: attr["status"].as_str().unwrap_or("").to_string(),
             year: attr["year"].as_str().unwrap_or("").to_string(),
             content_rating: attr["contentRating"].as_str().unwrap_or("").to_string(),
             tags: tags,
             created_at: attr["createdAt"].as_str().unwrap_or("").to_string(),
             updated_at: attr["updatedAt"].as_str().unwrap_or("").to_string(),
-            author: author
+            author: author,
         }
     }
 }

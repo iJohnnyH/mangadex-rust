@@ -1,7 +1,6 @@
-
-use reqwest::{Client, StatusCode, Error, Response};
-use thiserror::Error;
 use log::error;
+use reqwest::{Client, Error, Response, StatusCode};
+use thiserror::Error;
 
 use std::collections::HashMap;
 
@@ -14,14 +13,14 @@ pub enum ClientError {
     ParseJson(#[from] serde_json::Error),
 
     #[error("Status code {0}")]
-    MangaDexError(StatusCode, Response, reqwest::Error)
+    MangaDexError(StatusCode, Response, reqwest::Error),
 }
 
 impl ClientError {
     pub async fn from_resp(resp: reqwest::Response, err: Error) -> Self {
         let status = resp.status();
         match status {
-            status => Self::MangaDexError(status, resp, err)
+            status => Self::MangaDexError(status, resp, err),
         }
     }
 }
@@ -30,26 +29,30 @@ pub type ClientResp<T> = Result<T, ClientError>;
 
 pub struct Session {
     pub refresh_token: Option<String>,
-    pub client: reqwest::Client 
+    pub client: reqwest::Client,
 }
 
 impl Session {
     pub fn new() -> Self {
         Self {
             client: Client::new(),
-            refresh_token: None
+            refresh_token: None,
         }
     }
 
-    pub async fn get(&self, url: &str, params: Option<HashMap<String, String>>) -> Result<Response, ClientError> {
+    pub async fn get(
+        &self,
+        url: &str,
+        params: Option<HashMap<String, String>>,
+    ) -> Result<Response, ClientError> {
         let mut req = self.client.get(url);
         match params {
             Some(queries) => {
                 for (k, v) in queries.iter() {
                     req = req.query(&[(k, v)]);
                 }
-            },
-            _ => ()
+            }
+            _ => (),
         }
         // If refresh token is set, add it to the headers
 
