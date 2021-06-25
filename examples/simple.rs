@@ -8,6 +8,6 @@ async fn main() {
     println!("{:?}", m);
     println!("Finished fetching Komi-san!");
 
-    let mangas = mdex.mangas().await;
+    let mangas = mdex.mangas(None).await;
     println!("{:?}", mangas);
 }

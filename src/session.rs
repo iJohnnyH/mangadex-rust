@@ -3,7 +3,7 @@ use reqwest::{Client, StatusCode, Error, Response};
 use thiserror::Error;
 use log::error;
 
-// use std::collections::HashMap;
+use std::collections::HashMap;
 
 #[derive(Debug, Error)]
 pub enum ClientError {
@@ -41,8 +41,16 @@ impl Session {
         }
     }
 
-    pub async fn get(&self, url: &str) -> Result<Response, ClientError> {
-        let req = self.client.get(url);
+    pub async fn get(&self, url: &str, params: Option<HashMap<String, String>>) -> Result<Response, ClientError> {
+        let mut req = self.client.get(url);
+        match params {
+            Some(queries) => {
+                for (k, v) in queries.iter() {
+                    req = req.query(&[(k, v)]);
+                }
+            },
+            _ => ()
+        }
         // If refresh token is set, add it to the headers
 
         let resp = req.send().await?;
