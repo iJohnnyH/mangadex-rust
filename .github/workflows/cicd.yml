@@ -1,4 +1,4 @@
-name: Continuous integration continuous deployment
+name: Continuous Integration
 
 on:
   pull_request:
